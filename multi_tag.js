@@ -2,50 +2,53 @@
   'use strict';
 
   // ============ CONFIG ============
-  const SHOW_DV_PROFILE = false;            // DV P7/P8.x или просто DV
-  const COLORIZE_RATING = true;             // цветовая индикация рейтинга
-  const RATING_COLOR_TEXT_ONLY = false;     // если true: красим текст, фон #f0f0f0
+  const SHOW_DV_PROFILE = true;            // DV P7/P8.x or just DV
+  
+  const SHOW_RATINGS = false;               // Show/hide rating badges completely
+  const COLORIZE_RATING = false;             // color rating indicator
+  const RATING_COLOR_TEXT_ONLY = false;     // if true: color the text, background #f0f0f0
 
-  // План и прогресс сезонов
-  const ENABLE_PLANNED_EPISODES = true;     // подтягивать плановое число серий сезона
-  const SHOW_SEASON_PROGRESS_BADGE = true;  // "Ep current/planned", если есть оба числа
+  // Season plan and progress
+  const ENABLE_PLANNED_EPISODES = true;     // fetch planned episode count for season
+  const SHOW_SEASON_PROGRESS_BADGE = true;  // "Ep current/planned", if both numbers exist
 
   // TMDb
-  const ENABLE_TMDB = true;                 // TMDb для планов по сезонам
-  const ENABLE_TMDB_ENDED = true;           // TMDb как источник статуса "Ended" для сериалов
-  const TMDB_API_KEY = 'API_KEY';           // <<< вставьте свой TMDb API key
+  const ENABLE_TMDB = true;                 // TMDb for season plans
+  const ENABLE_TMDB_ENDED = true;           // TMDb as source for "Ended" status for series
+  const TMDB_API_KEY = '4daf8c227fbf3b16184e2a5f06ca22b9';           // <<< insert your TMDb API key here
   const TMDB_LANGUAGE = 'en-US';
 
-  // Сериалы: бейдж Ended (только если TMDb сказал)
+  // Series: Ended badge (only if TMDb confirmed)
   const SHOW_SERIES_ENDED_BADGE = true;
+  const SHOW_SERIES_CONTINUING_BADGE = true;
 
-  // Person (актёры): место рождения на постере (из метаданных Jellyfin)
+  // Person (actors): birthplace on poster (from Jellyfin metadata)
   const SHOW_PERSON_BIRTHPLACE = true;
   const BIRTHPLACE_PREFIX = '📍 ';
-  const BIRTHPLACE_MAX_LEN = 48; // обрезка с многоточием
+  const BIRTHPLACE_MAX_LEN = 48; // truncate with ellipsis
 
-  // Person (актёры): отображение страны рождения флагом (опционально)
-  // Режим: 'text' (текст места), 'flag' (только флаг страны), 'both' (и флаг, и текст)
+  // Person (actors): display birth country as flag (optional)
+  // Mode: 'text' (place text), 'flag' (flag only), 'both' (flag and text)
   const PERSON_BIRTHPLACE_DISPLAY = 'both';
-  const BIRTHFLAG_FALLBACK_TO_TEXT = true;  // если флаг не распознан — показать текст (если есть)
-  const BIRTHFLAG_FONT_SIZE_PX = 18;        // размер эмодзи-флага
-  const BIRTHFLAG_BG = 'rgba(0,0,0,0.55)';  // подложка флага
+  const BIRTHFLAG_FALLBACK_TO_TEXT = true;  // if flag not recognized — show text (if available)
+  const BIRTHFLAG_FONT_SIZE_PX = 18;        // emoji flag size
+  const BIRTHFLAG_BG = 'rgba(0,0,0,0.55)';  // flag background
   const BIRTHFLAG_RADIUS_PX = 8;
 
 
-  // Рендер флага: 'twemoji' (картинка, стабильно везде) или 'emoji' (системный флаг-эмодзи)
+  // Flag render mode: 'twemoji' (image, stable everywhere) or 'emoji' (system flag emoji)
   const BIRTHFLAG_RENDER_MODE = 'twemoji';
   const TWEMOJI_FLAG_BASE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/';
 
-  // Person (актёры): возраст на момент релиза текущего фильма/эпизода (из метаданных Jellyfin)
+  // Person (actors): age at time of current film/episode release (from Jellyfin metadata)
   const SHOW_PERSON_AGE_AT_RELEASE = true;
-  const SHOW_PERSON_AGE_AT_RELEASE_BOTTOM = true; // дополнительно: возраст снизу справа
-  // Нижний правый бейдж: 'current' (полный возраст сейчас/на дату смерти) или 'release' (возраст на дату релиза контекста)
+  const SHOW_PERSON_AGE_AT_RELEASE_BOTTOM = true; // additionally: age bottom right
+  // Bottom right badge: 'current' (full age now/at death date) or 'release' (age at context release date)
   const PERSON_BOTTOM_AGE_MODE = 'current';
-  const AGE_BADGE_TEMPLATE = '{age} y';  // можно заменить, например: '{age}y'
+  const AGE_BADGE_TEMPLATE = '{age} y';  // can be replaced, e.g.: '{age}y'
   const AGE_BADGE_BG = '#455a64';          // blue-grey 700
 
-  // Задержки/потоки
+  // Delays/concurrency
   const FETCH_DELAY_BEFORE_IMAGE_MS = 150;
   const FETCH_DELAY_ON_HOVER_MS      = 80;
   const FALLBACK_FETCH_TIMEOUT_MS    = 1200;
@@ -53,7 +56,7 @@
   const MAX_CONCURRENT_REQUESTS      = 6;
   const PROCESS_TICK_MS              = 100;
 
-  // Селекторы/визуал
+  // Selectors/visual
   const VIEW_MARGIN   = 200;
   const overlayClass  = 'quality-overlay-label';
   const wrapperClass  = 'quality-overlay-label-wrapper';
@@ -64,7 +67,7 @@
   const personDeadBadgeClass = 'person-dead-overlay-badge';
   const TARGET_SELECTORS = ['a.cardImageContainer', '.listItemImage'].join(',');
 
-  // ===== Очередь/кэш =====
+  // ===== Queue/cache =====
   const requestQueue = [];
   // cache: { [itemId]: { itemType?, qualityParts?: string[], audio?: {text,type}, musicFormat?, bookFormat?, rating?, seasonPlanned?, seasonCurrent?, seriesEnded?, birthPlace?, birthDate? } }
   const overlayCache = {};
@@ -77,7 +80,7 @@
   let intersectionObserver = null;
   const observedElements = new WeakSet();
 
-  // ===== Внешние кэши =====
+  // ===== External caches =====
   const tvmazeShowIdCache       = new Map();
   const tvmazeSeasonOrderCache  = new Map();
   const tmdbTvIdCache           = new Map();
@@ -85,12 +88,23 @@
   const tmdbSeasonCountCache    = new Map();
   const tmdbTvStatusCache       = new Map();
 
-  // ===== Фиксированные цвета аудио/форматов =====
-  const COLOR_ATMOS  = '#00acc1'; // cyan 600
-  const COLOR_DD51   = '#f4511e'; // deep orange 600
-  const COLOR_STEREO = '#00897b'; // teal 600
-  const COLOR_MUSIC  = '#7e57c2'; // deep purple 400 (не #8000cc)
-  const COLOR_BOOK   = '#9e9d24'; // lime 800
+  // ===== Fixed audio/format colors =====
+  const COLOR_DTSX        = '#00bcd4'; // DTS:X
+  const COLOR_ATMOS       = '#00acc1'; // Dolby Atmos (TrueHD Atmos)
+  const COLOR_DOLBY       = '#0097a7'; // Dolby (TrueHD)
+  const COLOR_DDPATMOS    = '#00838f'; // DD+ Atmos
+  const COLOR_DTSHDMA     = '#00796b'; // DTS-HD MA
+  const COLOR_DTSHDHRA    = '#00695c'; // DTS-HD HRA
+  const COLOR_DTSHD       = '#004d40'; // DTS-HD
+  const COLOR_DDP         = '#f57c00'; // DD+
+  const COLOR_DTSES       = '#ef6c00'; // DTS ES
+  const COLOR_DDEX        = '#e65100'; // DD EX
+  const COLOR_DTS         = '#7cb342'; // DTS
+  const COLOR_DD          = '#33691e'; // DD
+  const COLOR_STEREO      = '#546e7a'; // Stereo
+  const COLOR_MONO        = '#455a64'; // Mono
+  const COLOR_MUSIC       = '#7e57c2'; // deep purple 400 (not #8000cc)
+  const COLOR_BOOK        = '#9e9d24'; // lime 800
 
   // ===== ApiClient bootstrap =====
   const ApiClientRef =
@@ -113,17 +127,120 @@
   }
 
   function bootstrap(ApiClient) {
+    window._jellyfinDetectAudioLabel = detectAudioLabel;
+    
+    window._jellyfinOverlayCache = overlayCache;
+
+    // ===== localStorage persistent cache =====
+    const LS_KEY = 'jellyfin_quality_cache_v1';
+    const dmStore = {};            // DateModified per itemId (in-memory)
+    const lsValidated = new Set(); // items background-validated this session
+
+    function lsLoad() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return;
+        const store = JSON.parse(raw);
+        Object.keys(store).forEach(id => {
+          const entry = store[id];
+          if (entry && entry.data) {
+            overlayCache[id] = entry.data;
+            if (entry.dm) dmStore[id] = entry.dm;
+          }
+        });
+        console.log('Quality cache: hydrated', Object.keys(store).length, 'items from localStorage');
+      } catch(e) { console.warn('Quality cache: failed to load from localStorage', e); }
+    }
+
+    function lsSaveItem(itemId) {
+      if (!overlayCache[itemId]) return;
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        const store = raw ? JSON.parse(raw) : {};
+        store[itemId] = { data: overlayCache[itemId], dm: dmStore[itemId] || null };
+        localStorage.setItem(LS_KEY, JSON.stringify(store));
+      } catch(e) { console.warn('Quality cache: failed to save item', itemId, e); }
+    }
+
+    function lsDeleteItem(itemId) {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return;
+        const store = JSON.parse(raw);
+        delete store[itemId];
+        localStorage.setItem(LS_KEY, JSON.stringify(store));
+      } catch {}
+    }
+
+    window.clearJellyfinQualityCache = () => {
+      try { localStorage.removeItem(LS_KEY); } catch {}
+      Object.keys(overlayCache).forEach(k => delete overlayCache[k]);
+      Object.keys(dmStore).forEach(k => delete dmStore[k]);
+      lsValidated.clear();
+      console.log('Jellyfin quality cache cleared.');
+    };
+
+    function lsBackgroundValidate(itemId) {
+      if (lsValidated.has(itemId)) return;  // Already checked this session
+      if (!dmStore[itemId]) return;          // Fetched fresh this session — no stored DM to compare
+      lsValidated.add(itemId);
+      const userId = getUserId();
+      if (!userId) return;
+      ApiClient.getItem(userId, itemId).then(item => {
+        if (!item) return;
+        const currentDm = item.DateModified || null;
+        if (currentDm && currentDm !== dmStore[itemId]) {
+          console.log('Quality cache: invalidating stale entry for', itemId);
+          delete overlayCache[itemId];
+          delete dmStore[itemId];
+          lsValidated.delete(itemId);
+          lsDeleteItem(itemId);
+          enqueueItem(itemId);
+        }
+      }).catch(() => {});
+    }
+
+    // Hydrate overlayCache from localStorage immediately
+    lsLoad();
+
+    window._jellyfinAudioColorMap = {
+        
+      dtsx:     COLOR_DTSX,
+      atmos:    COLOR_ATMOS,
+      dolby:    COLOR_DOLBY,
+      ddpatmos: COLOR_DDPATMOS,
+      dtshdma:  COLOR_DTSHDMA,
+      dtshdhra: COLOR_DTSHDHRA,
+      pcm:      COLOR_DTSHDMA,
+      flac:     COLOR_DTSHDMA,
+      dtshd:    COLOR_DTSHD,
+      ddp:      COLOR_DDP,
+      dtses:    COLOR_DTSES,
+      ddex:     COLOR_DDEX,
+      dts:      COLOR_DTS,
+      dd:       COLOR_DD,
+      opus:     COLOR_DD,
+      aac:      COLOR_DD,
+      aaclc:    COLOR_DD,
+      heaac:    COLOR_DD,
+      aacld:    COLOR_DD,
+      xheaac:   COLOR_DDP,
+      heaacv2:  COLOR_DDP,
+      aaceld:   COLOR_DDP,
+      stereo:   COLOR_STEREO,
+      mono:     COLOR_MONO,
+    };
     function getUserId() {
       try { return (ApiClient && ApiClient._serverInfo && ApiClient._serverInfo.UserId) || null; }
       catch { return null; }
     }
 
-    // ===== Контекст страницы (текущий фильм/эпизод): дата релиза =====
+    // ===== Page context (current film/episode): release date =====
     let contextItemId = null;
     let contextReleaseDateUtc = null; // Date (UTC date-only)
     let contextSeq = 0;
 
-    // ===== Палитры рейтинга =====
+    // ===== Rating palettes =====
     function ratingBgPalette(r) {
       const val = Number(r) || 0;
       if (val < 4) return '#c62828';
@@ -153,7 +270,7 @@
       return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
     }
 
-    // ===== Создание бейджа =====
+    // ===== Badge creation =====
     function createLabel(label, type='quality', customBg=null, customTextColor=null) {
       const badge = document.createElement('div');
       badge.textContent = label;
@@ -165,10 +282,13 @@
       if (!customBg) {
         if (type === 'quality') {
           switch (label) {
-            case '4K': bgColor = '#0066cc'; break;
-            case 'HD': bgColor = '#009900'; break;
-            case 'SD': bgColor = '#666666'; break;
-            case 'HDR': bgColor = '#cc0000'; break;
+            case '8K': bgColor = '#6600cc'; break;    // Deep Purple
+            case '4K': bgColor = '#0066cc'; break;    // Blue (existing)
+            case '2K': bgColor = '#00cccc'; break;    // Cyan
+            case '1080p': bgColor = '#009933'; break; // Forest Green
+            case '720p': bgColor = '#ffa500'; break;  // Orange
+            case 'SD': bgColor = '#666666'; break;    // Gray (existing)
+            case 'HDR': bgColor = '#cc0000'; break;   // Red (existing)
             default: break;
           }
           if (label.startsWith('DV')) bgColor = '#8000cc';
@@ -356,8 +476,8 @@
         const mm = String(profile).match(/(\d+)/); p = mm ? Number(mm[1]) : NaN;
       }
       if (!Number.isFinite(p)) return 'DV';
-      if (p === 8 && blId != null && String(blId).trim() !== '') return `DV P8.${blId}`;
-      return `DV P${p}`;
+      if (p === 8 && blId != null && String(blId).trim() !== '') return `DV P8.${blId}`;
+      return `DV P${p}`;
     }
 
     // === Audio helpers ===
@@ -375,30 +495,114 @@
       }
       return null;
     }
+    
+    //=== DETECT BEST AUDIO ===
+    function scoreAudioStream(a) {
+      const haystack = [
+        a.DisplayTitle || '',
+        a.Title        || '',
+        a.Profile      || '',
+        a.Codec        || '',
+        a.AudioCodec   || '',
+        a.Format       || '',
+        a.Container    || '',
+        a.ChannelLayout|| '',
+        a.CodecTag     || '',
+        a.CodecLongName|| ''
+      ].join(' ').toLowerCase();
+
+      if (/dts.?x/i.test(haystack))                                      return 21; // DTS:X
+      if (/truehd/.test(haystack) && /atmos/.test(haystack))             return 20; // Dolby Atmos
+      if (/truehd/.test(haystack))                                        return 19; // Dolby (TrueHD)
+      if (/(eac3|dd\+|ddplus)/.test(haystack) && /atmos/.test(haystack)) return 18; // DD+ Atmos
+      if (/dts.?hd.?ma/.test(haystack))                                  return 17; // DTS-HD MA
+      if (/\bl?pcm\b|pcm_s\d+|\bflac\b/.test(haystack))                return 17; // PCM/LPCM/FLAC
+      if (/dts.?hd.?hra/.test(haystack))                                 return 16; // DTS-HD HRA
+      if (/dts.?hd/.test(haystack))                                      return 15; // DTS-HD
+      if (/eac3|dd\+|ddplus/.test(haystack))                             return 14; // DD+
+      if (/xhe.?aac/.test(haystack))                                     return 13; // xHE-AAC
+      if (/he.?aac.?v2/.test(haystack))                                  return 12; // HE-AACv2
+      if (/aac.?eld/.test(haystack))                                     return 11; // AAC-ELD
+      if (/dts.?es/.test(haystack))                                      return 10; // DTS ES
+      if (/dd.?ex/.test(haystack))                                       return  9; // DD EX
+      if (/\bdts\b/.test(haystack))                                      return  8; // DTS
+      if (/\bac3\b|\bdd\b|dolby.?digital/.test(haystack))               return  7; // DD
+      if (/(?:lib|b)?opus/.test(haystack) || (/\baac\b/.test(haystack) && !/xhe.?aac|he.?aac|aac.?lc|aac.?eld|aac.?ld/.test(haystack))) return 6; // OPUS/AAC
+      if (/aac.?lc/.test(haystack))                                      return  5; // AAC-LC
+      if (/he.?aac/.test(haystack))                                      return  4; // HE-AAC
+      if (/aac.?ld/.test(haystack))                                      return  3; // AAC-LD
+      if (/stereo/.test(haystack) || (a.Channels ?? 0) === 2)            return  2; // Stereo
+  return 1;                                                                         // Mono
+    }
     function pickBestAudioStream(audioStreams) {
       if (!Array.isArray(audioStreams) || audioStreams.length === 0) return null;
-      let best = null, bestCh = -1;
+      let best = null, bestScore = -1, bestCh = -1;
       for (const a of audioStreams) {
-        const ch = getChannelsFromStream(a) ?? 0;
-        if (ch > bestCh) { bestCh = ch; best = a; }
+        const score = scoreAudioStream(a);
+        const ch    = getChannelsFromStream(a) ?? 0;
+        if (score > bestScore || (score === bestScore && ch > bestCh)) {
+          best = a; bestScore = score; bestCh = ch;
+        }
       }
       return best;
     }
     function detectAudioLabel(audioStreams=[]) {
-      const hasAtmos = audioStreams.some(a =>
-        /atmos/i.test(a.DisplayTitle || a.Title || '') ||
-        /atmos/i.test(a.AudioCodec || a.Codec || '')
-      );
-      if (hasAtmos) return { text: 'ATMOS', type: 'atmos' };
+      if (!audioStreams.length) return null;
+      const best  = pickBestAudioStream(audioStreams);
+      const score = scoreAudioStream(best);
+      const ch    = getChannelsFromStream(best) ?? 0;
 
-      const best = pickBestAudioStream(audioStreams);
-      const ch = getChannelsFromStream(best) ?? 0;
-      if (ch >= 6)   return { text: 'DD 5.1', type: 'dd51' };
-      if (ch >= 2)   return { text: 'Stereo',     type: 'stereo' };
-      return null;
+      // Build channel suffix e.g. "7.1", "5.1", "2.0"
+      function chSuffix(n) {
+        if (n <= 0) return '';
+        const lfe = (n >= 6) ? 1 : 0;
+        return ` ${n - lfe}.${lfe}`;
+      }
+
+      if (score === 21) return { text: 'DTS:X'         + chSuffix(ch), type: 'dtsx'     };
+      if (score === 20) return { text: 'Dolby Atmos'   + chSuffix(ch), type: 'atmos'    };
+      if (score === 19) return { text: 'Dolby'         + chSuffix(ch), type: 'dolby'    };
+      if (score === 18) return { text: 'DD+ Atmos'     + chSuffix(ch), type: 'ddpatmos' };
+      
+      if (score === 17) {
+        const codecStr = String(best.Codec || best.AudioCodec || '').toLowerCase();
+        const isPCM    = /\bl?pcm\b|pcm_s\d+/.test(codecStr);
+        if (isPCM) {
+          const prefix   = /lpcm/.test(codecStr) ? 'LPCM' : 'PCM';
+          const bitMatch = codecStr.match(/s(\d+)/);
+          const bitDepth = bitMatch ? `:S${bitMatch[1]}` : '';
+          return { text: prefix + bitDepth + chSuffix(ch), type: 'pcm' };
+        }
+        if (/\bflac\b/.test(codecStr)) return { text: 'FLAC' + chSuffix(ch), type: 'flac' };
+        return { text: 'DTS-HD MA' + chSuffix(ch), type: 'dtshdma' };
+      }
+      
+      if (score === 16) return { text: 'DTS-HD HRA' + chSuffix(ch), type: 'dtshdhra' };
+      
+      if (score === 15) return { text: 'DTS-HD'        + chSuffix(ch), type: 'dtshd'    };
+      if (score === 14) return { text: 'DD+'           + chSuffix(ch), type: 'ddp'      };
+      if (score === 13) return { text: 'xHE-AAC'       + chSuffix(ch), type: 'xheaac'   };
+      if (score === 12) return { text: 'HE-AACv2'      + chSuffix(ch), type: 'heaacv2'  };
+      if (score === 11) return { text: 'AAC-ELD'       + chSuffix(ch), type: 'aaceld'   };
+      if (score === 10) return { text: 'DTS ES'        + chSuffix(ch), type: 'dtses'    };
+      if (score ===  9) return { text: 'DD EX'         + chSuffix(ch), type: 'ddex'     };
+      if (score ===  8) return { text: 'DTS'           + chSuffix(ch), type: 'dts'      };
+      if (score ===  7) return { text: 'DD'            + chSuffix(ch), type: 'dd'       };
+      
+      if (score ===  6) {
+        const codecStr = String(best.Codec || best.AudioCodec || '').toLowerCase();
+        if (/(?:lib|b)?opus/.test(codecStr)) return { text: 'OPUS' + chSuffix(ch), type: 'opus' };
+        return { text: 'AAC' + chSuffix(ch), type: 'aac' };
+      }
+      
+      if (score ===  5) return { text: 'AAC-LC'        + chSuffix(ch), type: 'aaclc'    };
+      if (score ===  4) return { text: 'HE-AAC'        + chSuffix(ch), type: 'heaac'    };
+      if (score ===  3) return { text: 'AAC-LD'        + chSuffix(ch), type: 'aacld'    };
+      if (score ===  2) return { text: 'Stereo',                        type: 'stereo'  };
+      return               { text: 'Mono',                              type: 'mono'    };
     }
 
-    // === Music format helpers (для альбомов) ===
+    // === Music format helpers (for albums) ===
     function prettyCodecName(media) {
       const st = media?.MediaStreams?.find(s => s.Type === 'Audio') || null;
       const cont = String(media?.Container || '').toLowerCase();
@@ -419,7 +623,7 @@
       return (raw || 'AUDIO').toUpperCase();
     }
 
-    // === E-book format helpers (для книг) ===
+    // === E-book format helpers (for books) ===
     function prettyBookFormat(item, media) {
       const cont  = String(media?.Container || item?.Container || '').toLowerCase();
       const path  = String(media?.Path || item?.Path || '').toLowerCase();
@@ -443,13 +647,16 @@
       return (src || 'BOOK').toUpperCase();
     }
 
-    // === Сборка качества (видео + HDR/DV) и аудио ===
+    // === Build quality (video + HDR/DV) and audio ===
     function buildQuality(videoStream, audioStreams=[]) {
       if (!videoStream) return null;
       const height = videoStream.Height || 0;
       let quality = 'SD';
-      if (height >= 1440) quality = '4K';
-      else if (height >= 531) quality = 'HD';
+      if (height >= 4320) quality = '8K';
+      else if (height >= 2160) quality = '4K';
+      else if (height >= 1440) quality = '2K';
+      else if (height >= 1080) quality = '1080p';
+      else if (height >= 720) quality = '720p';
 
       const range = (videoStream.VideoRange || videoStream.VideoRangeType || '').toLowerCase();
       const hdrFormat = (videoStream.HDRFormat || '').toLowerCase();
@@ -474,13 +681,13 @@
       return str.length > n ? (str.slice(0, n - 1) + '…') : str;
     }
     function getPersonBirthPlace(item) {
-      // Основной путь: ProductionLocations (обычно массив строк)
+      // Primary path: ProductionLocations (usually an array of strings)
       const locs = item?.ProductionLocations;
       if (Array.isArray(locs)) {
         const joined = locs.map(x => String(x || '').trim()).filter(Boolean).join(', ');
         if (joined) return joined;
       }
-      // Фолбэки на случай иных сборок/плагинов/полей
+      // Fallbacks for other builds/plugins/fields
       const alt =
         item?.BirthPlace ?? item?.Birthplace ?? item?.PlaceOfBirth ?? item?.BirthLocation ?? null;
       const str = String(alt || '').trim();
@@ -513,12 +720,12 @@
     }
                 function normCountryName(s) {
       let t = String(s || '');
-      // Убираем диакритику: España -> Espana, Česká -> Ceska
+      // Remove diacritics: España -> Espana, Česká -> Ceska
       try { t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch {}
       return t
         .toLowerCase()
         .replace(/ё/g, 'е')
-        .replace(/[’`]/g, "'")
+        .replace(/['`]/g, "'")
         .replace(/[()\[\]{}"'`]/g, ' ')
         .replace(/[\.]/g, ' ')
         .replace(/[-–—]/g, ' ')
@@ -526,7 +733,7 @@
         .replace(/\s+/g, ' ')
         .trim();
     }
-    // Базовый словарь: расширяйте при необходимости (ключи — нормализованные названия).
+    // Base dictionary: extend as needed (keys are normalized names).
   const COUNTRY_NAME_TO_ISO2 = Object.freeze({
     '004': 'AF',
     '008': 'AL',
@@ -9884,10 +10091,10 @@
       const raw = String(birthPlace || '').trim();
       if (!raw) return null;
 
-      // Часто формат: City, Region, Country, ... (иногда в конце добавляют континент/регионы вроде EU/Africa)
+      // Common format: City, Region, Country, ... (sometimes continent/regions like EU/Africa appended at end)
       const parts = raw.split(',').map(x => x.trim()).filter(Boolean);
 
-      // Нормализованные значения, которые НЕ являются странами и должны игнорироваться при поиске
+      // Normalized values that are NOT countries and should be ignored during lookup
       const IGNORE = new Set([
         'africa', 'asia', 'europe', 'oceania', 'antarctica',
         'north america', 'south america', 'central america', 'latin america', 'america',
@@ -9898,7 +10105,7 @@
         'северная америка', 'южная америка', 'центральная америка', 'латинская америка', 'америка', 'карибы',
       ]);
 
-      // Идём справа налево: пропускаем EU/Africa и берём первую распознанную страну
+      // Iterate right to left: skip EU/Africa and take the first recognized country
       for (let i = parts.length - 1; i >= 0; i--) {
         const np = normCountryName(parts[i]);
         if (!np) continue;
@@ -9906,7 +10113,7 @@
         if (COUNTRY_NAME_TO_ISO2[np]) return np;
       }
 
-      // Фолбэк: попробуем найти ключ в строке (по словам)
+      // Fallback: try to find key in the string (by words)
       const nfull = ' ' + normCountryName(raw) + ' ';
       for (const key of Object.keys(COUNTRY_NAME_TO_ISO2)) {
         if (!key) continue;
@@ -9921,22 +10128,22 @@
       return COUNTRY_NAME_TO_ISO2[key] || null;
     }
     function getPersonBirthDateUtc(item) {
-      // В Jellyfin Person обычно использует PremiereDate как дату рождения (DateTimeOffset)
+      // In Jellyfin Person, PremiereDate is typically used as the birth date (DateTimeOffset)
       const d1 = parseDateOnlyUtc(item?.PremiereDate);
       if (d1) return d1;
 
-      // На всякий случай фолбэки (если где-то прокинуто по-другому)
+      // Fallbacks just in case (if passed differently somewhere)
       const d2 = parseDateOnlyUtc(item?.BirthDate ?? item?.DateOfBirth ?? item?.Birthday ?? null);
       if (d2) return d2;
 
-      // Грубый фолбэк по году (если есть)
+      // Rough fallback by year (if available)
       const y = Number(item?.ProductionYear);
       if (Number.isFinite(y) && y > 0) return new Date(Date.UTC(y, 0, 1));
       return null;
     }
 
     function getPersonDeathDateUtc(item) {
-      // У Person в Jellyfin EndDate часто используется как дата смерти
+      // For Person in Jellyfin, EndDate is often used as the death date
       const d1 = parseDateOnlyUtc(item?.EndDate);
       if (d1) return d1;
       const d2 = parseDateOnlyUtc(item?.DeathDate ?? item?.DateOfDeath ?? item?.Died ?? null);
@@ -9986,7 +10193,7 @@
     }
 
 function computeBottomOffsetForAge(container) {
-      // Если снизу есть строка места рождения — поднимаем бейдж возраста выше неё
+      // If there is a birthplace text line at the bottom — raise the age badge above it
       try {
         const textEl = container.querySelector(`.${birthplaceTextClass}[data-birthplace="1"]`);
         if (textEl) {
@@ -10012,7 +10219,7 @@ function computeBottomOffsetForAge(container) {
       } else {
         el.textContent = text;
       }
-      // Динамический отступ снизу (над текстом места рождения)
+      // Dynamic bottom offset (above birthplace text)
       const bottom = computeBottomOffsetForAge(container);
       el.style.bottom = bottom + 'px';
     }
@@ -10026,10 +10233,10 @@ function computeBottomOffsetForAge(container) {
         const container = w.parentElement;
         if (!container) return;
 
-        // Верхний левый: пометка "Умер" (если есть дата смерти)
+        // Top left: "Deceased" marker (if death date exists)
         ensureDeadBadge(container, !!data.deathDate);
 
-        // Верхний правый: возраст на дату релиза контекста (как раньше)
+        // Top right: age at context release date (as before)
         let topTxt = null;
         if (SHOW_PERSON_AGE_AT_RELEASE && contextReleaseDateUtc && data.birthDate) {
           const birth = parseDateOnlyUtc(data.birthDate);
@@ -10040,7 +10247,7 @@ function computeBottomOffsetForAge(container) {
         }
         ensureAgeBadge(container, topTxt);
 
-        // Нижний правый: полный возраст (сейчас/на дату смерти) или возраст на релиз — по настройке
+        // Bottom right: full age (now/at death date) or age at release — based on setting
         let bottomTxt = null;
         if (SHOW_PERSON_AGE_AT_RELEASE_BOTTOM && data.birthDate) {
           const birth = parseDateOnlyUtc(data.birthDate);
@@ -10061,7 +10268,7 @@ function computeBottomOffsetForAge(container) {
       });
     }
     function updateAllPersonAgeBadges() {
-      // Обновляем только там, где уже вставлены wrapper'ы
+      // Update only where wrappers are already inserted
       document.querySelectorAll(`.${wrapperClass}[data-itemid]`).forEach(w => {
         const personId = w.dataset.itemid;
         const data = overlayCache[personId];
@@ -10070,7 +10277,7 @@ function computeBottomOffsetForAge(container) {
       });
     }
 
-    // ===== Контекст: достаём id текущего Item из URL и забираем PremiereDate =====
+    // ===== Context: get current Item id from URL and fetch PremiereDate =====
     function getHashQueryParam(name) {
       const h = String(window.location.hash || '');
       const q = h.indexOf('?');
@@ -10082,16 +10289,16 @@ function computeBottomOffsetForAge(container) {
       const raw = getHashQueryParam('id') || null;
       if (raw && /^[a-f0-9]{32}$/i.test(raw)) return raw;
 
-      // Фолбэк: по всей строке URL/Hash
+      // Fallback: search entire URL/Hash string
       const m = String(window.location.href || '').match(/[?#&]id=([a-f0-9]{32})/i);
       return m ? m[1] : null;
     }
     function pickReleaseDateUtc(item) {
-      // Для фильмов/эпизодов/сериалов используется PremiereDate
+      // For movies/episodes/series, PremiereDate is used
       const d = parseDateOnlyUtc(item?.PremiereDate) || parseDateOnlyUtc(item?.OriginalAirDate) || null;
       if (d) return d;
 
-      // Если только год
+      // If only year is available
       const y = Number(item?.ProductionYear);
       if (Number.isFinite(y) && y > 0) return new Date(Date.UTC(y, 0, 1));
       return null;
@@ -10104,7 +10311,7 @@ function computeBottomOffsetForAge(container) {
       const id = extractContextItemIdFromUrl();
       contextItemId = id;
       contextReleaseDateUtc = null;
-      updateAllPersonAgeBadges(); // на всякий: убрать старые бейджи при смене страницы
+      updateAllPersonAgeBadges(); // just in case: remove old badges on page change
 
       if (!id) return;
 
@@ -10166,10 +10373,18 @@ function computeBottomOffsetForAge(container) {
       }
       return null;
     }
+    
+    //Series ended tag
     function isTmdbStatusEnded(status) {
       const s = String(status || '').toLowerCase();
       return s === 'ended' || s === 'canceled' || s === 'cancelled';
     }
+    //Series Continuing tag
+    function isTmdbStatusContinuing(status) {
+      const s = String(status || '').toLowerCase();
+      return s === 'returning series' || s === 'in production' || s === 'planned';
+    }
+    
     async function tmdbGetTvStatus(tmdbId) {
       if (tmdbTvStatusCache.has(tmdbId)) return tmdbTvStatusCache.get(tmdbId);
       try {
@@ -10215,7 +10430,7 @@ function computeBottomOffsetForAge(container) {
       }
     }
 
-    // TVMaze (фолбэк для плана сезонов)
+    // TVMaze (fallback for season plans)
     async function tvmazeLookupShowIdByProvider(providerIds) {
       if (providerIds?.Tvdb) {
         const key = 'tvdb:' + String(providerIds.Tvdb);
@@ -10253,22 +10468,42 @@ function computeBottomOffsetForAge(container) {
     // ===== Jellyfin helpers =====
     async function fetchFirstEpisode(userId, parentId) {
       try {
+        // First try Season 1 specifically to avoid Season 0 (Specials/Extras)
         const resp = await ApiClient.ajax({
           type: 'GET',
           url: ApiClient.getUrl('/Items', {
             ParentId: parentId,
             IncludeItemTypes: 'Episode',
             Recursive: true,
-            SortBy: 'PremiereDate',
+            SortBy: 'ParentIndexNumber,IndexNumber',
             SortOrder: 'Ascending',
+            ParentIndexNumber: 1,
             Limit: 1,
             userId
           }),
           dataType: 'json'
         });
-        return resp.Items?.[0] || null;
+        if (resp.Items?.[0]) return resp.Items[0];
+
+        // Fallback: if no Season 1 found, get any episode excluding Season 0
+        const fallback = await ApiClient.ajax({
+          type: 'GET',
+          url: ApiClient.getUrl('/Items', {
+            ParentId: parentId,
+            IncludeItemTypes: 'Episode',
+            Recursive: true,
+            SortBy: 'ParentIndexNumber,IndexNumber',
+            SortOrder: 'Ascending',
+            Limit: 10,
+            userId
+          }),
+          dataType: 'json'
+        });
+        const nonSpecial = fallback.Items?.find(e => e.ParentIndexNumber !== 0);
+        return nonSpecial || fallback.Items?.[0] || null;
       } catch { return null; }
     }
+    
     async function fetchFirstAlbumTrack(userId, albumId) {
       try {
         const resp = await ApiClient.ajax({
@@ -10302,10 +10537,10 @@ function computeBottomOffsetForAge(container) {
       return null;
     }
 
-    // ===== Вытягивание и наполнение =====
+    // ===== Fetch and populate =====
     async function fetchAndFill(itemId) {
       if (!itemId) return;
-      if (overlayCache[itemId]) { deliverToWaiters(itemId, overlayCache[itemId], itemId); return; }
+      if (overlayCache[itemId]) { deliverToWaiters(itemId, overlayCache[itemId], itemId); lsBackgroundValidate(itemId); return; }
       if (inflight.has(itemId)) return;
 
       inflight.add(itemId);
@@ -10334,7 +10569,7 @@ function computeBottomOffsetForAge(container) {
             }
           }
         } else if (item.Type === 'MusicAlbum') {
-          // Формат альбома (по первому треку)
+          // Album format (from first track)
           const track = await fetchFirstAlbumTrack(userId, itemId);
           if (track?.Id) {
             const full = await ApiClient.getItem(userId, track.Id);
@@ -10344,7 +10579,7 @@ function computeBottomOffsetForAge(container) {
             }
           }
         } else if (item.Type === 'Book') {
-          // Формат электронной книги
+          // E-book format
           const media = item?.MediaSources?.[0];
           bookFormat = prettyBookFormat(item, media);
         } else {
@@ -10358,14 +10593,14 @@ function computeBottomOffsetForAge(container) {
           }
         }
 
-        // Рейтинг
+        // Rating
         let ratingValue = null;
         if (typeof item?.CommunityRating === 'number') ratingValue = item.CommunityRating;
         else if (typeof item?.CriticRating === 'number') ratingValue = item.CriticRating;
 
         const initialData = { rating: ratingValue, itemType: item?.Type };
 
-        // Person: место рождения + дата рождения
+        // Person: birthplace + birth date
         if (item?.Type === 'Person') {
           if (SHOW_PERSON_BIRTHPLACE) {
             const bp = getPersonBirthPlace(item);
@@ -10379,7 +10614,7 @@ function computeBottomOffsetForAge(container) {
             const bd = getPersonBirthDateUtc(item);
             if (bd) initialData.birthDate = bd.toISOString();
           }
-          // Дата смерти (если есть) — для расчёта полного возраста
+          // Death date (if exists) — for calculating full age
           const dd = getPersonDeathDateUtc(item);
           if (dd) initialData.deathDate = dd.toISOString();
         }
@@ -10389,41 +10624,48 @@ function computeBottomOffsetForAge(container) {
         if (musicFormat)  initialData.musicFormat = musicFormat;
         if (bookFormat)   initialData.bookFormat  = bookFormat;
 
-        // Сезон: текущее число эпизодов — быстро, если уже есть
+        // Season: current episode count — fast, if already available
         if (item.Type === 'Season' && typeof item?.ChildCount === 'number' && item.ChildCount > 0) {
           initialData.seasonCurrent = item.ChildCount;
         }
 
+        dmStore[itemId] = item.DateModified || null;
         overlayCache[itemId] = initialData;
+        lsSaveItem(itemId);
         deliverToWaiters(itemId, initialData, itemId);
 
-        // Person: если контекст релиза уже известен — сразу проставим возраст
+        // Person: if release context already known — apply age badges immediately
         if (item?.Type === 'Person') {
           updatePersonAgeBadgesForItem(itemId);
         }
 
-        // СЕРИАЛ: статус Ended ТОЛЬКО из TMDb
-        if (item.Type === 'Series' && SHOW_SERIES_ENDED_BADGE) {
+        // SERIES: Status badges from TMDb
+        if (item.Type === 'Series' && (SHOW_SERIES_ENDED_BADGE || SHOW_SERIES_CONTINUING_BADGE)) {
           let seriesEnded = null;
+          let seriesContinuing = null;
           if (ENABLE_TMDB_ENDED && TMDB_API_KEY) {
             try {
               const tmdbId = await tmdbLookupTvIdByProvider(item?.ProviderIds || {});
               if (tmdbId) {
                 const status = await tmdbGetTvStatus(tmdbId);
-                seriesEnded = status != null ? isTmdbStatusEnded(status) : null;
+                if (status != null) {
+                  seriesEnded = isTmdbStatusEnded(status);
+                  seriesContinuing = isTmdbStatusContinuing(status);
+                }
               }
             } catch {}
           }
-          if (seriesEnded !== null) {
-            overlayCache[itemId] = { ...overlayCache[itemId], seriesEnded: !!seriesEnded };
-          } else {
-            const { seriesEnded, ...rest } = overlayCache[itemId];
-            overlayCache[itemId] = rest;
+          if (seriesEnded !== null || seriesContinuing !== null) {
+            const updates = { ...overlayCache[itemId] };
+            if (seriesEnded !== null) updates.seriesEnded = !!seriesEnded;
+            if (seriesContinuing !== null) updates.seriesContinuing = !!seriesContinuing;
+            overlayCache[itemId] = updates;
+            lsSaveItem(itemId);
           }
-          updateEndedBadgeForItem(itemId);
+          updateSeriesStatusBadgeForItem(itemId);
         }
 
-        // СЕЗОН: добираем план/текущее (асинхронно)
+        // SEASON: fetch plan/current asynchronously
         if (item.Type === 'Season') {
           if (overlayCache[itemId].seasonCurrent == null) {
             try {
@@ -10440,6 +10682,7 @@ function computeBottomOffsetForAge(container) {
               });
               if (typeof resp?.TotalRecordCount === 'number') {
                 overlayCache[itemId] = { ...overlayCache[itemId], seasonCurrent: resp.TotalRecordCount };
+                lsSaveItem(itemId);
                 updateOverlaysForItem(itemId);
               }
             } catch {}
@@ -10459,6 +10702,7 @@ function computeBottomOffsetForAge(container) {
               }
               if (typeof planned === 'number' && planned > 0) {
                 overlayCache[itemId] = { ...overlayCache[itemId], seasonPlanned: planned };
+                lsSaveItem(itemId);
                 updateOverlaysForItem(itemId);
               }
             } catch {}
@@ -10486,14 +10730,19 @@ function computeBottomOffsetForAge(container) {
       wrapper.className = wrapperClass;
       if (itemIdForWrapper) wrapper.dataset.itemid = itemIdForWrapper;
 
-      // СЕРИАЛ: Ended (только если пришло из TMDb)
+      // SERIES: Status badges (only if confirmed by TMDb)
       if (data.seriesEnded === true && SHOW_SERIES_ENDED_BADGE) {
         const endedBadge = createLabel('Ended', 'meta', '#c62828', '#ffffff');
         endedBadge.setAttribute('data-ended', '1');
         wrapper.appendChild(endedBadge);
       }
+      if (data.seriesContinuing === true && SHOW_SERIES_CONTINUING_BADGE) {
+        const continuingBadge = createLabel('Ongoing', 'meta', '#2e7d32', '#ffffff');
+        continuingBadge.setAttribute('data-continuing', '1');
+        wrapper.appendChild(continuingBadge);
+      }
 
-      // Качество/HDR/DV
+      // Quality/HDR/DV
       if (Array.isArray(data.qualityParts) && data.qualityParts.length) {
         data.qualityParts.forEach(label => {
           const badge = createLabel(label, 'quality');
@@ -10501,19 +10750,42 @@ function computeBottomOffsetForAge(container) {
         });
       }
 
-      // Аудио (ATMOS/DD 5.1/Stereo) — фиксированные цвета
+      // Audio — full format colors
       if (data.audio && data.audio.text) {
-        let bg = '#444';
-        if (data.audio.type === 'atmos')   bg = COLOR_ATMOS;
-        else if (data.audio.type === 'dd51')  bg = COLOR_DD51;
-        else if (data.audio.type === 'stereo')bg = COLOR_STEREO;
+        const audioColorMap = {
+          dtsx:     COLOR_DTSX,
+          atmos:    COLOR_ATMOS,
+          dolby:    COLOR_DOLBY,
+          ddpatmos: COLOR_DDPATMOS,
+          dtshdma:  COLOR_DTSHDMA,
+          dtshdhra: COLOR_DTSHDHRA,
+          pcm:      COLOR_DTSHDMA,
+          flac:     COLOR_DTSHDMA,
+          dtshd:    COLOR_DTSHD,
+          ddp:      COLOR_DDP,
+          dtses:    COLOR_DTSES,
+          ddex:     COLOR_DDEX,
+          dts:      COLOR_DTS,
+          dd:       COLOR_DD,
+          opus:     COLOR_DD,
+          aac:      COLOR_DD,
+          aaclc:    COLOR_DD,
+          heaac:    COLOR_DD,
+          aacld:    COLOR_DD,
+          xheaac:   COLOR_DDP,
+          heaacv2:  COLOR_DDP,
+          aaceld:   COLOR_DDP,
+          stereo:   COLOR_STEREO,
+          mono:     COLOR_MONO,
+        };
+        const bg = audioColorMap[data.audio.type] || '#444';
         const txtColor = textColorForBackground(bg);
         const audioBadge = createLabel(data.audio.text, 'audio', bg, txtColor);
         audioBadge.setAttribute('data-audio', '1');
         wrapper.appendChild(audioBadge);
       }
 
-      // Музыкальные альбомы: формат (FLAC/MP3/...)
+      // Music albums: format (FLAC/MP3/...)
       if (data.musicFormat) {
         const bg = COLOR_MUSIC;
         const txtColor = textColorForBackground(bg);
@@ -10522,7 +10794,7 @@ function computeBottomOffsetForAge(container) {
         wrapper.appendChild(musicBadge);
       }
 
-      // Электронные книги: формат (EPUB/PDF/...)
+      // E-books: format (EPUB/PDF/...)
       if (data.bookFormat) {
         const bg = COLOR_BOOK;
         const txtColor = textColorForBackground(bg);
@@ -10531,7 +10803,7 @@ function computeBottomOffsetForAge(container) {
         wrapper.appendChild(bookBadge);
       }
 
-      // Сезон: EP / прогресс
+      // Season: EP / progress
       const epText = composeEpBadgeText(data);
       if (epText) {
         const epBadge = createLabel(epText, 'meta');
@@ -10539,8 +10811,8 @@ function computeBottomOffsetForAge(container) {
         wrapper.appendChild(epBadge);
       }
 
-      // Рейтинг
-      if (typeof data.rating === 'number') {
+      // Rating
+      if ( (SHOW_RATINGS == true) && (typeof data.rating === 'number') ) {
         const value = Math.round(data.rating * 10) / 10;
         let ratingBg = null, ratingText = null;
         if (COLORIZE_RATING) {
@@ -10560,7 +10832,7 @@ function computeBottomOffsetForAge(container) {
         container.style.position = 'relative';
       }
       container.appendChild(wrapper);
-      // Person: страна/место рождения (текст/флаг/оба — по настройке PERSON_BIRTHPLACE_DISPLAY)
+      // Person: birth country/place (text/flag/both — based on PERSON_BIRTHPLACE_DISPLAY setting)
       if (SHOW_PERSON_BIRTHPLACE && data.itemType === 'Person') {
         const mode = String(PERSON_BIRTHPLACE_DISPLAY || 'text').toLowerCase();
         const wantText = (mode === 'text' || mode === 'both');
@@ -10618,7 +10890,7 @@ function computeBottomOffsetForAge(container) {
         }
 
         // --- Positioning ---
-        // Если выбран режим 'both' и показаны и флаг, и строка текста — поднимаем флаг выше строки.
+        // If mode is 'both' and both flag and text line are shown — raise flag above text line.
         const _flagEl = container.querySelector(`.${birthFlagClass}[data-birthflag="1"]`);
         if (_flagEl) {
           if (mode === 'both') {
@@ -10630,19 +10902,19 @@ function computeBottomOffsetForAge(container) {
               _flagEl.style.bottom = '4px';
             }
           } else {
-            // 'flag' или 'text' (или fallback) — оставляем как раньше
+            // 'flag' or 'text' (or fallback) — keep as before
             _flagEl.style.bottom = '4px';
           }
         }
       }
 
-      // Person: возраст/статус (включая "Умер") — обновляем для Person
+      // Person: age/status (including "Deceased") — update for Person
       if (data.itemType === 'Person') {
         updatePersonAgeBadgesForItem(itemIdForWrapper);
       }
     }
 
-    // Асинхронное обновление EP и Ended
+    // Async update for EP and Ended
     function updateOverlaysForItem(itemId) {
       const data = overlayCache[itemId];
       if (!data) return;
@@ -10660,24 +10932,39 @@ function computeBottomOffsetForAge(container) {
         }
       });
     }
-    function updateEndedBadgeForItem(itemId) {
+    
+    //Series Status Badge
+    function updateSeriesStatusBadgeForItem(itemId) {
       const data = overlayCache[itemId];
       const wrappers = document.querySelectorAll(`.${wrapperClass}[data-itemid="${itemId}"]`);
       wrappers.forEach(w => {
-        let badge = w.querySelector('.' + overlayClass + '[data-ended="1"]');
+        // Handle Ended badge
+        let endedBadge = w.querySelector('.' + overlayClass + '[data-ended="1"]');
         if (data && data.seriesEnded === true && SHOW_SERIES_ENDED_BADGE) {
-          if (!badge) {
-            badge = createLabel('Ended', 'meta', '#c62828', '#ffffff');
-            badge.setAttribute('data-ended', '1');
-            w.insertBefore(badge, w.firstChild);
+          if (!endedBadge) {
+            endedBadge = createLabel('Ended', 'meta', '#c62828', '#ffffff');
+            endedBadge.setAttribute('data-ended', '1');
+            w.insertBefore(endedBadge, w.firstChild);
           }
         } else {
-          if (badge) badge.remove();
+          if (endedBadge) endedBadge.remove();
+        }
+        
+        // Handle Continuing badge
+        let continuingBadge = w.querySelector('.' + overlayClass + '[data-continuing="1"]');
+        if (data && data.seriesContinuing === true && SHOW_SERIES_CONTINUING_BADGE) {
+          if (!continuingBadge) {
+            continuingBadge = createLabel('Ongoing', 'meta', '#2e7d32', '#ffffff');
+            continuingBadge.setAttribute('data-continuing', '1');
+            w.insertBefore(continuingBadge, w.firstChild);
+          }
+        } else {
+          if (continuingBadge) continuingBadge.remove();
         }
       });
     }
 
-    // ===== Очередь =====
+    // ===== Queue =====
     function scheduleFetch(itemId, delayMs) {
       if (!itemId) return;
       if (delayedTimers.has(itemId)) return;
@@ -10715,11 +11002,11 @@ function computeBottomOffsetForAge(container) {
     }
     setInterval(processQueue, PROCESS_TICK_MS);
 
-    // ===== Готовность изображения =====
+    // ===== Image readiness =====
     function isImageReady(el) {
       if (el.classList.contains('listItemImage')) {
         const bg = (getComputedStyle(el).backgroundImage || '');
-        const hasBg = /url\(/i.test(bg);
+        const hasBg = /url\(/i.test(bg);
         const notLazy = !el.classList.contains('lazy');
         return hasBg || notLazy;
       } else {
@@ -10812,7 +11099,7 @@ function computeBottomOffsetForAge(container) {
       );
     }
 
-    // ===== Наблюдатели, ховеры и форсы =====
+    // ===== Observers, hovers and force passes =====
     function observeIntersections() {
       if (intersectionObserver) intersectionObserver.disconnect();
       intersectionObserver = new IntersectionObserver(entries => {
@@ -10924,7 +11211,7 @@ function computeBottomOffsetForAge(container) {
       });
     }
 
-    // MutationObserver (DOM изменения)
+    // MutationObserver (DOM changes)
     let mutationTimeout;
     const mutationObserver = new MutationObserver(() => {
       clearTimeout(mutationTimeout);
