@@ -3,11 +3,9 @@
 
 [DISSCLAIMER] I am not very experienced in coding, so Claude AI was used to help me create my tweaks and changes
 
-All original features are still there
-
 I also created a secondary script that adds support for MediaBar Plugin
-
-The changes I implemented are [editing in progress]::
+All original features are still there along with the changes that I implemented,
+Which are [editing in progress]:
 1. Translated all comments from Russian to English
 
 ![logo](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
