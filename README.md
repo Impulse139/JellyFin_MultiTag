@@ -1,5 +1,11 @@
 # jellyfin_multi_tag
 **Adds tags with information about quality, number of episodes, etc.**
+** [DISSCLAIMER]] I am not very experienced in coding, so Claude AI was used to help me create my tweaks and changes**
+**All original features are still there**
+**Created a secondary script that adds support for MediaBar Plugin**
+The changes I implemented are:
+1. Translated all comments from Russian to English
+
 ![logo](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
 ![logo2](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/2.jpg)
 ![logo3](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/3.jpg)
