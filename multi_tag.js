@@ -15,7 +15,7 @@
   // TMDb
   const ENABLE_TMDB = true;                 // TMDb for season plans
   const ENABLE_TMDB_ENDED = true;           // TMDb as source for "Ended" status for series
-  const TMDB_API_KEY = '4daf8c227fbf3b16184e2a5f06ca22b9';           // <<< insert your TMDb API key here
+  const TMDB_API_KEY = 'API_KEY';           // <<< insert your TMDb API key here
   const TMDB_LANGUAGE = 'en-US';
 
   // Series: Ended badge (only if TMDb confirmed)
@@ -11253,3 +11253,4 @@ function computeBottomOffsetForAge(container) {
     refreshContextReleaseDate();
   }
 })();
+
