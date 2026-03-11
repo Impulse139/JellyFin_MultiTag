@@ -4,9 +4,8 @@
 [DISSCLAIMER] I am not very experienced in coding, so Claude AI was used to help me create my tweaks and changes
 
 I also created a secondary script that adds support for MediaBar Plugin
-All original features are still there along with the changes that I implemented,
 
-Which are [editing in progress]:
+All original features are still there along with the changes that I implemented, Which are [editing in progress]:
 1. Translated all comments from Russian to English
 
 ![logo](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/MediaBar_Support_ScreenCap.jpg)
