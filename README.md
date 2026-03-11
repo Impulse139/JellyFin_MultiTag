@@ -9,7 +9,8 @@ All original features are still there along with the changes that I implemented,
 Which are [editing in progress]:
 1. Translated all comments from Russian to English
 
-![logo](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
+![logo](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/MediaBar_Support_ScreenCap.jpg)
+![logo1](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
 ![logo2](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/2.jpg)
 ![logo3](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/3.jpg)
 ![logo4](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/4.png)
