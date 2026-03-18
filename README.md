@@ -196,5 +196,3 @@ The following are exposed on the `window` object to allow companion scripts (suc
 ![logo4](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/4.png)
 ![logo3](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/9.jpg)
 
-
-The original idea was created by https://github.com/BobHasNoSoul/Jellyfin-Qualitytags
