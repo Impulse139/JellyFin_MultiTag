@@ -117,18 +117,20 @@ This fork first explicitly requests the first episode of Season 1 (`ParentIndexN
 
 #### Resolution badges
 
+The generic `HD` label from the original has been removed entirely. 
+
+Ranges account for cropped content (e.g. a 1920×804 file with black bars removed still correctly detects as 1080p).
+
 The original had 3 resolution tiers (`4K`, `HD`, `SD`). This fork expands to 6 distinct tiers, each with its own badge color:
 
 | Badge | Threshold | Color | Hex |
 |---|---|---|---|
-| 8K | ≥ 4320px height | ![](https://placehold.co/15x15/6600cc/6600cc.png) | `#6600cc` |
-| 4K | ≥ 2160px height | ![](https://placehold.co/15x15/0066cc/0066cc.png) | `#0066cc` |
-| 2K | ≥ 1440px height | ![](https://placehold.co/15x15/00cccc/00cccc.png) | `#00cccc` |
-| 1080p | ≥ 1080px height | ![](https://placehold.co/15x15/009933/009933.png) | `#009933` |
-| 720p | ≥ 720px height | ![](https://placehold.co/15x15/ffa500/ffa500.png) | `#ffa500` |
-| SD | < 720px height | ![](https://placehold.co/15x15/666666/666666.png) | `#666666` |
-
-The generic `HD` label from the original has been removed entirely.
+| 8K | > 2160px height | ![](https://placehold.co/15x15/6600cc/6600cc.png) | `#6600cc` |
+| 4K | 1441 – 2160px height | ![](https://placehold.co/15x15/0066cc/0066cc.png) | `#0066cc` |
+| 2K | 1081 – 1440px height | ![](https://placehold.co/15x15/00cccc/00cccc.png) | `#00cccc` |
+| 1080p | 721 – 1080px height | ![](https://placehold.co/15x15/009933/009933.png) | `#009933` |
+| 720p | 481 – 720px height | ![](https://placehold.co/15x15/ffa500/ffa500.png) | `#ffa500` |
+| SD | ≤ 480px height | ![](https://placehold.co/15x15/666666/666666.png) | `#666666` |
 
 ---
 
