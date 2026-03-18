@@ -652,11 +652,11 @@
       if (!videoStream) return null;
       const height = videoStream.Height || 0;
       let quality = 'SD';
-      if (height >= 4320) quality = '8K';
-      else if (height >= 2160) quality = '4K';
-      else if (height >= 1440) quality = '2K';
-      else if (height >= 1080) quality = '1080p';
-      else if (height >= 720) quality = '720p';
+      if (height > 2160) quality = '8K';
+      else if (height <= 2160 && height > 1440) quality = '4K';
+      else if (height <= 1440 && height > 1080) quality = '2K';
+      else if (height <= 1080 && height > 720) quality = '1080p';
+      else if (height <= 720 && height > 480) quality = '720p';
 
       const range = (videoStream.VideoRange || videoStream.VideoRangeType || '').toLowerCase();
       const hdrFormat = (videoStream.HDRFormat || '').toLowerCase();
