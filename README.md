@@ -5,6 +5,8 @@
 
 The original idea was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/BobHasNoSoul/jellyfin-qualitytags).
 
+(see [Screenshots can be found here](#Screenshots))
+
 ---
 
 ## Installation
@@ -60,11 +62,10 @@ The following features from the original script are present and untouched:
 The following original features are still present but have been extended or changed:
 
 - **Video resolution** — still shows a resolution badge, but expanded (see [Video Quality](#video-quality))
-- **HDR / Dolby Vision** — still shown; DV now defaults to showing full profile (`SHOW_DV_PROFILE = true`)
 - **Audio format** — still shown as a badge, but completely rewritten detection engine (see [Audio Quality](#audio-quality))
 - **Ratings** — still shown, but now can be disabled entirely via `SHOW_RATINGS`
-- **Series status** — "Ended" badge still present; now joined by an "Ongoing" badge (see [Series Status](#series-status))
-- **Season episode progress** — unchanged in behaviour, but now benefits from the persistent cache
+- **Series status and quality badge*** — "Ended" badge still present; now joined by an "Ongoing" badge (see [Series Status](#series-status))
+- **Series quality badge** — New method for determining series quality; (see [Series quality detection fix](#Series-quality-detection-fix))
 
 ---
 
@@ -72,7 +73,7 @@ The following original features are still present but have been extended or chan
 
 ### All comments translated from Russian to English
 
-The original script's comments were in Russian. All comments have been translated to English throughout.
+The original script's comments were in Russian, which have been translated to English.
 
 ---
 
@@ -165,7 +166,7 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 
 ### Media bar integration
 
-A companion script `MediaBar_QualityTags.js` is included in this repository. It integrates the quality tag data into the Jellyfin media bar, displaying the audio and video badges alongside the currently playing item's info bar.
+A companion script `MediaBar_QualityTags.js` is included in this repository. It integrates the quality tag data into the Jellyfin media bar, displaying the quality badges alongside the shown item's info.
 
 ---
 
@@ -186,6 +187,7 @@ The following are exposed on the `window` object to allow companion scripts (suc
 - `window._jellyfinOverlayCache` — the live overlay cache
 
 
+### Screenshots
 ![logo](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/MediaBar_Support_ScreenCap.jpg)
 ![logo1](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
 ![logo2](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/2.jpg)
