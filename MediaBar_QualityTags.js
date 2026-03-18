@@ -307,11 +307,11 @@
                 if (videoStream && videoStream.Height) {
                     // Resolution
                     const height = videoStream.Height;
-                    if (height >= 4320) qualityData.resolution = '8K';
-                    else if (height >= 2160) qualityData.resolution = '4K';
-                    else if (height >= 1440) qualityData.resolution = '2K';
-                    else if (height >= 1080) qualityData.resolution = '1080p';
-                    else if (height >= 720) qualityData.resolution = '720p';
+                    if (height > 2160) qualityData.resolution = '8K';
+                    else if (height <= 2160 && height > 1440) qualityData.resolution = '4K';
+                    else if (height <= 1440 && height > 1080) qualityData.resolution = '2K';
+                    else if (height <= 1080 && height > 720) qualityData.resolution = '1080p';
+                    else if (height <= 720 && height > 480) qualityData.resolution = '720p';
                     else qualityData.resolution = 'SD';
 
                     // HDR/DV detection
