@@ -4,8 +4,8 @@
   // ============ CONFIG ============
   const SHOW_DV_PROFILE = true;            // DV P7/P8.x or just DV
   
-  const SHOW_RATINGS = false;               // Show/hide rating badges completely
-  const COLORIZE_RATING = false;             // color rating indicator
+  const SHOW_RATINGS = true;               // Show/hide rating badges completely
+  const COLORIZE_RATING = true;             // color rating indicator
   const RATING_COLOR_TEXT_ONLY = false;     // if true: color the text, background #f0f0f0
 
   // Season plan and progress
@@ -15,7 +15,7 @@
   // TMDb
   const ENABLE_TMDB = true;                 // TMDb for season plans
   const ENABLE_TMDB_ENDED = true;           // TMDb as source for "Ended" status for series
-  const TMDB_API_KEY = 'API_KEY';           // <<< insert your TMDb API key here
+  const TMDB_API_KEY = '4daf8c227fbf3b16184e2a5f06ca22b9';           // <<< insert your TMDb API key here
   const TMDB_LANGUAGE = 'en-US';
 
   // Series: Ended badge (only if TMDb confirmed)
@@ -96,11 +96,11 @@
   const COLOR_DTSHDMA     = '#00796b'; // DTS-HD MA
   const COLOR_DTSHDHRA    = '#00695c'; // DTS-HD HRA
   const COLOR_DTSHD       = '#004d40'; // DTS-HD
-  const COLOR_DDP         = '#f57c00'; // DD+
-  const COLOR_DTSES       = '#ef6c00'; // DTS ES
+  const COLOR_DDP         = '#33691e'; // DD+
+  const COLOR_DTSES       = '#7cb342'; // DTS ES
   const COLOR_DDEX        = '#e65100'; // DD EX
-  const COLOR_DTS         = '#7cb342'; // DTS
-  const COLOR_DD          = '#33691e'; // DD
+  const COLOR_DTS         = '#ef6c00'; // DTS
+  const COLOR_DD          = '#f57c00'; // DD
   const COLOR_STEREO      = '#546e7a'; // Stereo
   const COLOR_MONO        = '#455a64'; // Mono
   const COLOR_MUSIC       = '#7e57c2'; // deep purple 400 (not #8000cc)
@@ -244,17 +244,17 @@
     function ratingBgPalette(r) {
       const val = Number(r) || 0;
       if (val < 4) return '#c62828';
-      if (val < 6) return '#ef6c00';
+      if (val < 6) return '#7cb342';
       if (val < 7) return '#f9a825';
-      if (val < 8) return '#7cb342';
+      if (val < 8) return '#ef6c00';
       return '#2e7d32';
     }
     function ratingTextPalette(r) {
       const val = Number(r) || 0;
       if (val < 4) return '#c62828';
-      if (val < 6) return '#ef6c00';
+      if (val < 6) return '#7cb342';
       if (val < 7) return '#f9a825';
-      if (val < 8) return '#7cb342';
+      if (val < 8) return '#ef6c00';
       return '#2e7d32';
     }
     function textColorForBackground(hex) {
@@ -11253,4 +11253,3 @@ function computeBottomOffsetForAge(container) {
     refreshContextReleaseDate();
   }
 })();
-
