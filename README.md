@@ -153,13 +153,13 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 | 17 | DTS-HD MA / PCM / LPCM / FLAC | ![](https://placehold.co/15x15/00796b/00796b.png) | `#00796b` |
 | 16 | DTS-HD HRA | ![](https://placehold.co/15x15/00695c/00695c.png) | `#00695c` |
 | 15 | DTS-HD | ![](https://placehold.co/15x15/004d40/004d40.png) | `#004d40` |
-| 14 | DD+ | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
-| 13–11 | xHE-AAC / HE-AACv2 / AAC-ELD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
-| 10 | DTS ES | ![](https://placehold.co/15x15/ef6c00/ef6c00.png) | `#ef6c00` |
+| 14 | DD+ | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
+| 13–11 | xHE-AAC / HE-AACv2 / AAC-ELD | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
+| 10 | DTS ES | ![](https://placehold.co/15x15/7cb342/7cb342.png) | `#7cb342` |
 | 9 | DD EX | ![](https://placehold.co/15x15/e65100/e65100.png) | `#e65100` |
-| 8 | DTS | ![](https://placehold.co/15x15/7cb342/7cb342.png) | `#7cb342` |
-| 7 | DD | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
-| 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
+| 8 | DTS | ![](https://placehold.co/15x15/ef6c00/ef6c00.png) | `#ef6c00` |
+| 7 | DD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
+| 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 | 2 | Stereo | ![](https://placehold.co/15x15/546e7a/546e7a.png) | `#546e7a` |
 | 1 | Mono | ![](https://placehold.co/15x15/455a64/455a64.png) | `#455a64` |
 
