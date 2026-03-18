@@ -108,8 +108,8 @@ This fork first explicitly requests the first episode of Season 1 (`ParentIndexN
 
 | Badge | Color | Hex |
 |---|---|---|
-| DV (Dolby Vision) | Purple | `#8000cc` |
-| HDR | Red | `#cc0000` |
+| DV (Dolby Vision) | ![](https://placehold.co/15x15/8000cc/8000cc.png) | `#8000cc` |
+| HDR | ![](https://placehold.co/15x15/cc0000/cc0000.png) | `#cc0000` |
 
 ---
 
@@ -119,12 +119,12 @@ The original had 3 resolution tiers (`4K`, `HD`, `SD`). This fork expands to 6 d
 
 | Badge | Threshold | Color | Hex |
 |---|---|---|---|
-| 8K | ≥ 4320px height | Deep Purple | `#6600cc` |
-| 4K | ≥ 2160px height | Blue | `#0066cc` |
-| 2K | ≥ 1440px height | Cyan | `#00cccc` |
-| 1080p | ≥ 1080px height | Forest Green | `#009933` |
-| 720p | ≥ 720px height | Orange | `#ffa500` |
-| SD | < 720px height | Grey | `#666666` |
+| 8K | ≥ 4320px height | ![](https://placehold.co/15x15/6600cc/6600cc.png) | `#6600cc` |
+| 4K | ≥ 2160px height | ![](https://placehold.co/15x15/0066cc/0066cc.png) | `#0066cc` |
+| 2K | ≥ 1440px height | ![](https://placehold.co/15x15/00cccc/00cccc.png) | `#00cccc` |
+| 1080p | ≥ 1080px height | ![](https://placehold.co/15x15/009933/009933.png) | `#009933` |
+| 720p | ≥ 720px height | ![](https://placehold.co/15x15/ffa500/ffa500.png) | `#ffa500` |
+| SD | < 720px height | ![](https://placehold.co/15x15/666666/666666.png) | `#666666` |
 
 The generic `HD` label from the original has been removed entirely.
 
@@ -142,22 +142,22 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 
 | Score | Badge Label | Color | Hex |
 |---|---|---|---|
-| 21 | DTS:X | Cyan | `#00bcd4` |
-| 20 | Dolby Atmos | Cyan (dark) | `#00acc1` |
-| 19 | Dolby (TrueHD) | Cyan (darker) | `#0097a7` |
-| 18 | DD+ Atmos | Teal | `#00838f` |
-| 17 | DTS-HD MA / PCM / LPCM / FLAC | Dark Teal | `#00796b` |
-| 16 | DTS-HD HRA | Darker Teal | `#00695c` |
-| 15 | DTS-HD | Darkest Teal | `#004d40` |
-| 14 | DD+ | Orange | `#f57c00` |
-| 13–11 | xHE-AAC / HE-AACv2 / AAC-ELD | Orange | `#f57c00` |
-| 10 | DTS ES | Dark Orange | `#ef6c00` |
-| 9 | DD EX | Deeper Orange | `#e65100` |
-| 8 | DTS | Green | `#7cb342` |
-| 7 | DD | Dark Green | `#33691e` |
-| 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | Dark Green | `#33691e` |
-| 2 | Stereo | Blue Grey | `#546e7a` |
-| 1 | Mono | Darker Blue Grey | `#455a64` |
+| 21 | DTS:X | ![](https://placehold.co/15x15/00bcd4/00bcd4.png) | `#00bcd4` |
+| 20 | Dolby Atmos | ![](https://placehold.co/15x15/00acc1/00acc1.png) | `#00acc1` |
+| 19 | Dolby (TrueHD) | ![](https://placehold.co/15x15/0097a7/0097a7.png) | `#0097a7` |
+| 18 | DD+ Atmos | ![](https://placehold.co/15x15/00838f/00838f.png) | `#00838f` |
+| 17 | DTS-HD MA / PCM / LPCM / FLAC | ![](https://placehold.co/15x15/00796b/00796b.png) | `#00796b` |
+| 16 | DTS-HD HRA | ![](https://placehold.co/15x15/00695c/00695c.png) | `#00695c` |
+| 15 | DTS-HD | ![](https://placehold.co/15x15/004d40/004d40.png) | `#004d40` |
+| 14 | DD+ | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
+| 13–11 | xHE-AAC / HE-AACv2 / AAC-ELD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
+| 10 | DTS ES | ![](https://placehold.co/15x15/ef6c00/ef6c00.png) | `#ef6c00` |
+| 9 | DD EX | ![](https://placehold.co/15x15/e65100/e65100.png) | `#e65100` |
+| 8 | DTS | ![](https://placehold.co/15x15/7cb342/7cb342.png) | `#7cb342` |
+| 7 | DD | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
+| 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/33691e/33691e.png) | `#33691e` |
+| 2 | Stereo | ![](https://placehold.co/15x15/546e7a/546e7a.png) | `#546e7a` |
+| 1 | Mono | ![](https://placehold.co/15x15/455a64/455a64.png) | `#455a64` |
 
 > PCM and LPCM additionally display bit depth where available (e.g. `PCM:S24 5.1`).
 
