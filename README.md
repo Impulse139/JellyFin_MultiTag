@@ -5,7 +5,7 @@
 
 The original idea was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/BobHasNoSoul/jellyfin-qualitytags).
 
-(see [Screenshots can be found here](#Screenshots))
+[Screenshots can be found here](#Screenshots)
 
 ---
 
