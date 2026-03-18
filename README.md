@@ -45,7 +45,20 @@ Which was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/Bob
   const SHOW_SERIES_CONTINUING_BADGE = true;    // show the green "Ongoing" badge
 ```
 
----
+## For Custom CSS with non rectangular Cast & Crew cards, Recommend setting these values to FALSE:
+
+```js
+  // Person (actors): birthplace on poster (from Jellyfin metadata)
+  const SHOW_PERSON_BIRTHPLACE = false;
+
+  // Person (actors): display birth country as flag (optional)
+  // Mode: 'text' (place text), 'flag' (flag only), 'both' (flag and text)
+  const BIRTHFLAG_FALLBACK_TO_TEXT = false;
+
+  // Person (actors): age at time of current film/episode release (from Jellyfin metadata)
+  const SHOW_PERSON_AGE_AT_RELEASE = false;
+  const SHOW_PERSON_AGE_AT_RELEASE_BOTTOM = false; // additionally: age bottom right
+```
 
 ## Features
 
