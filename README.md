@@ -7,8 +7,6 @@ This is a fork to Druidblack's jellyfin_multi_tag script [Druidblack/jellyfin_mu
 
 Which was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/BobHasNoSoul/jellyfin-qualitytags).
 
-[Screenshots can be found here](#Screenshots)
-
 ---
 
 ## Installation
@@ -20,6 +18,7 @@ Which was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/Bob
 5. If badges don't appear immediately, clear your browser/client cache. For Jellyfin Media Player the cache is at:
    `C:\Users\USERNAME\AppData\Local\Jellyfin Media Player\cache`
 
+[Screenshots can be found here](#Screenshots)
 ---
 
 ## Additional settings at the beggining of the file that can be adjusted:
