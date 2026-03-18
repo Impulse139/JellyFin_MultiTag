@@ -1,11 +1,11 @@
 # jellyfin_multi_tag
-**Adds badges with information about quality, episode count, series status, and more.**
-
-> **Disclaimer:** I am not very experienced in coding, so Claude AI was used to help me create my tweaks and changes.
-
 This is a fork to Druidblack's jellyfin_multi_tag script [Druidblack/jellyfin_multi_tag](https://github.com/Druidblack/jellyfin_multi_tag)
 
 Which was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/BobHasNoSoul/jellyfin-qualitytags).
+
+> **Disclaimer:** I am not very experienced in coding, so Claude AI was used to help me create my tweaks and changes.
+
+**This script adds badges with information about quality, episode count, series status, and more.**
 
 ---
 
