@@ -113,19 +113,19 @@
             'FLAC':        '#00796b',
             'DTS-HD HRA':  '#00695c', // Teal 900 — High-Resolution Audio variant; very dark teal, signifies lossless quality
             'DTS-HD':      '#004d40', // Green 900 — Core DTS-HD; rich green for high-definition audio
-            'DD+':         '#f57c00', // Orange 700 — Dolby Digital Plus; warm orange for enhanced surround sound
-            'xHE-AAC':     '#f57c00',
-            'HE-AACv2':    '#f57c00',
-            'AAC-ELD':     '#f57c00',
-            'DTS ES':      '#ef6c00', // Orange 600 — Extended Surround DTS; slightly lighter orange
-            'DD EX':       '#e65100', // Deep Orange 800 — Dolby Digital EX (6.1/7.1); intense orange for expanded channels
-            'DTS':         '#7cb342', // Light Green 600 — Standard DTS; fresh green for reliable discrete surround
-            'DD':          '#33691e', // Dark Olive Green — Classic Dolby Digital (5.1); traditional and widely supported
-            'OPUS':        '#33691e',
-            'AAC':         '#33691e',
-            'AAC-LC':      '#33691e',
-            'HE-AAC':      '#33691e',
-            'AAC-LD':      '#33691e',
+            'DD+':         '#33691e', // Dark Green — Dolby Digital Plus
+            'xHE-AAC':     '#33691e',
+            'HE-AACv2':    '#33691e',
+            'AAC-ELD':     '#33691e',
+            'DTS ES':      '#7cb342', // Light Green — Extended Surround DTS
+            'DD EX':       '#e65100', // Deep Orange — Dolby Digital EX (6.1/7.1)
+            'DTS':         '#ef6c00', // Orange — Standard DTS
+            'DD':          '#f57c00', // Light Orange — Classic Dolby Digital (5.1)
+            'OPUS':        '#f57c00',
+            'AAC':         '#f57c00',
+            'AAC-LC':      '#f57c00',
+            'HE-AAC':      '#f57c00',
+            'AAC-LD':      '#f57c00',
             'Stereo':      '#546e7a', // Blue Gray 500 — Standard stereo; neutral blue-gray for basic two-channel audio
             'Mono':        '#455a64', // Blue Gray 600 — Mono audio; slightly darker than stereo, for legacy or voice content  
             
