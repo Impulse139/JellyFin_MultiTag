@@ -190,9 +190,9 @@ The following are exposed on the `window` object to allow companion scripts (suc
 
 ### Screenshots
 ![logo](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/MediaBar_Support_ScreenCap.jpg)
-![logo1](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/8.jpg)
-![logo2](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/2.jpg)
-![logo3](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/3.jpg)
+![logo1](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/movies.jpg)
+![logo2](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/in_show.jpg)
+![logo3](https://github.com/Impulse139/JellyFin_MultiTag/blob/main/Img/in_season.jpg)
 ![logo4](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/4.png)
 ![logo3](https://github.com/Druidblack/jellyfin_multi_tag/blob/main/Img/9.jpg)
 
