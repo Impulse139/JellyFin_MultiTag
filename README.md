@@ -174,7 +174,7 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 | 7 | DD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 | 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 
-
+#### Mono/Stereo
 
 | Score | Badge Label | Color | Hex |
 |---|---|---|---|
