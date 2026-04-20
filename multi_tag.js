@@ -181,6 +181,31 @@
     };
 
     function lsBackgroundValidate(itemId) {
+      // bug fix: if Movie/Episode is cached with no quality data, it fetched
+      // before Jellyfin finished scanning the file. this fix removes the empty wrapper from the DOM,
+      // re-registers the container as a waiter, and re-queues a fresh fetch.
+      // It retries every page refresh until real data arrives.
+      const cached = overlayCache[itemId];
+      if (cached && (cached.itemType === 'Movie' || cached.itemType === 'Episode')) {
+        if (!Array.isArray(cached.qualityParts) && !cached.audio) {
+          console.log('Quality cache: empty entry for', itemId, '— re-fetching');
+          const wrappers = document.querySelectorAll(`.${wrapperClass}[data-itemid="${itemId}"]`);
+          wrappers.forEach(w => {
+            const container = w.parentElement;
+            w.remove();
+            if (container && container.matches(TARGET_SELECTORS)) {
+              if (!waiters.has(itemId)) waiters.set(itemId, new Set());
+              waiters.get(itemId).add(container);
+            }
+          });
+          delete overlayCache[itemId];
+          delete dmStore[itemId];
+          lsDeleteItem(itemId);
+          enqueueItem(itemId);
+          return;
+        }
+      }
+
       if (lsValidated.has(itemId)) return;  // Already checked this session
       if (!dmStore[itemId]) return;          // Fetched fresh this session — no stored DM to compare
       lsValidated.add(itemId);
@@ -189,7 +214,16 @@
       ApiClient.getItem(userId, itemId).then(item => {
         if (!item) return;
         const currentDm = item.DateModified || null;
-        if (currentDm && currentDm !== dmStore[itemId]) {
+        let stale = !!(currentDm && currentDm !== dmStore[itemId]);
+
+        // Bug fix: Season ChildCount changed — Jellyfin does NOT update DateModified when episodes are added
+        if (!stale && item.Type === 'Season' && typeof item.ChildCount === 'number') {
+          if (cached && typeof cached.seasonCurrent === 'number' && cached.seasonCurrent !== item.ChildCount) {
+            stale = true;
+          }
+        }
+
+        if (stale) {
           console.log('Quality cache: invalidating stale entry for', itemId);
           delete overlayCache[itemId];
           delete dmStore[itemId];
