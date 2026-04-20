@@ -174,6 +174,8 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 | 7 | DD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 | 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 
+> PCM and LPCM additionally display bit depth where available (e.g. `PCM:S24 5.1`).
+
 #### Mono/Stereo
 
 | Score | Badge Label | Color | Hex |
@@ -184,8 +186,6 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 Stereo and Mono appear as badge labels when no recognizable surround codec is detected. 
 Additionally, any codec that resolves to a 2.0 or 1.0 channel track (e.g. `DD 2.0`, `DTS 2.0`) will display using the Stereo or Mono color respectively — since at that channel count, the experience is stereo/mono regardless of codec. 
 Lossless formats (FLAC, PCM, LPCM) are exempt from this override and always keep their own color.
-
-> PCM and LPCM additionally display bit depth where available (e.g. `PCM:S24 5.1`).
 
 ---
 
