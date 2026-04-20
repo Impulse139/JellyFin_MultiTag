@@ -13,7 +13,7 @@ Which was inspired by [BobHasNoSoul/Jellyfin-Qualitytags](https://github.com/Bob
 
 1. Install the **JavaScript Injector Plugin** for Jellyfin
 2. Get a free API key from [themoviedb.org](https://themoviedb.org)
-3. Paste the contents of `multi_tag.js` into the plugin (replacing `API_KEY` with your TMDb key), save, and reload
+3. Paste the contents of `multi_tag.js` into the plugin (REPLACING `API_KEY` with your TMDb key), save, and reload
 4. For media bar integration, also inject `MediaBar_QualityTags.js`
 5. If badges don't appear immediately, clear your browser/client cache. For Jellyfin Media Player the cache is at:
    `C:\Users\USERNAME\AppData\Local\Jellyfin Media Player\cache`
@@ -173,8 +173,17 @@ All audio badges include a channel suffix (e.g. `Dolby Atmos 7.1`, `DTS-HD MA 5.
 | 8 | DTS | ![](https://placehold.co/15x15/ef6c00/ef6c00.png) | `#ef6c00` |
 | 7 | DD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
 | 6–3 | OPUS / AAC / AAC-LC / HE-AAC / AAC-LD | ![](https://placehold.co/15x15/f57c00/f57c00.png) | `#f57c00` |
+
+---
+
+| Score | Badge Label | Color | Hex |
+|---|---|---|---|
 | 2 | Stereo | ![](https://placehold.co/15x15/546e7a/546e7a.png) | `#546e7a` |
 | 1 | Mono | ![](https://placehold.co/15x15/455a64/455a64.png) | `#455a64` |
+
+Stereo and Mono appear as badge labels when no recognizable surround codec is detected. 
+Additionally, any codec that resolves to a 2.0 or 1.0 channel track (e.g. `DD 2.0`, `DTS 2.0`) will display using the Stereo or Mono color respectively — since at that channel count, the experience is stereo/mono regardless of codec. 
+Lossless formats (FLAC, PCM, LPCM) are exempt from this override and always keep their own color.
 
 > PCM and LPCM additionally display bit depth where available (e.g. `PCM:S24 5.1`).
 
