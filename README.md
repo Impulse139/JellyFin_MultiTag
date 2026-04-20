@@ -199,7 +199,12 @@ A companion script `MediaBar_QualityTags.js` is included in this repository. It 
 
 Quality data is now cached in `localStorage` under the key `jellyfin_quality_cache_v1`, persisting across browser sessions for significantly faster badge rendering on repeat loads.
 
-Cache entries are automatically invalidated by comparing Jellyfin's `DateModified` timestamp — if a file has been updated on the server, the cache entry for that item is discarded and re-fetched. Each item is only re-validated once per session. A utility function `window.clearJellyfinQualityCache()` is also exposed for manually clearing the cache from the browser console if needed.
+Cache entries are automatically invalidated using two strategies:
+
+- **`DateModified` check** — if Jellyfin's `DateModified` timestamp has changed (e.g. a file was replaced or metadata was edited), the entry is discarded and re-fetched.
+- **`ChildCount` check (Seasons)** — if the episode count on a Season has changed, the entry is invalidated even if `DateModified` is unchanged. Jellyfin does not update `DateModified` on a season when a new episode is added, so this check catches that case explicitly.
+
+Additionally, if a Movie or Episode is cached with no quality data (no resolution, no audio codec) — which can happen if the entry was fetched before Jellyfin finished scanning the file — the cache entry is automatically discarded and re-fetched on the next page load. This retries every session until real data is returned. Each normally-populated item is only re-validated once per session. A utility function `window.clearJellyfinQualityCache()` is also exposed for manually clearing the cache from the browser console if needed.
 
 ---
 
