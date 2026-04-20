@@ -86,6 +86,9 @@
     function getQualityBadgeColor(label, audioType) {
         // If audioType is provided, pull directly from the main script's color map
         if (audioType && window._jellyfinAudioColorMap && window._jellyfinAudioColorMap[audioType]) {
+            const isLossless = ['flac', 'pcm', 'lpcm'].includes(audioType);
+            if (!isLossless && /\b1\.0$/.test(label)) return '#455a64'; // COLOR_MONO
+            if (!isLossless && /\b2\.0$/.test(label)) return '#546e7a'; // COLOR_STEREO
             return window._jellyfinAudioColorMap[audioType];
         }
         const colorMap = {
