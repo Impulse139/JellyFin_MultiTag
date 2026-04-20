@@ -10778,7 +10778,14 @@ function computeBottomOffsetForAge(container) {
           stereo:   COLOR_STEREO,
           mono:     COLOR_MONO,
         };
-        const bg = audioColorMap[data.audio.type] || '#444';
+        //Mono Stereo Channel Color override
+        let bg = audioColorMap[data.audio.type] || '#444';
+        const isLossless = ['flac', 'pcm', 'lpcm'].includes(data.audio.type);
+        if (!isLossless) {
+          if (/\b1\.0$/.test(data.audio.text)) bg = COLOR_MONO;
+          else if (/\b2\.0$/.test(data.audio.text)) bg = COLOR_STEREO;
+        }
+        
         const txtColor = textColorForBackground(bg);
         const audioBadge = createLabel(data.audio.text, 'audio', bg, txtColor);
         audioBadge.setAttribute('data-audio', '1');
