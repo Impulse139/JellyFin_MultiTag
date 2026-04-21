@@ -323,6 +323,7 @@
             case '720p': bgColor = '#ffa500'; break;  // Orange
             case 'SD': bgColor = '#666666'; break;    // Gray (existing)
             case 'HDR': bgColor = '#cc0000'; break;   // Red (existing)
+            case 'SDR_DV': bgColor = '#6b4f5a'; break; // Dusty Mauve — DV with SDR base layer
             default: break;
           }
           if (label.startsWith('DV')) bgColor = '#8000cc';
@@ -699,8 +700,17 @@
       const isDV = hasDolbyVision(videoStream);
       const dvLabel = SHOW_DV_PROFILE ? getDolbyVisionBadge(videoStream) : (isDV ? 'DV' : null);
 
+      //HDR, DV, SDR_DV Detection
       const parts = [quality];
-      if (isHDR) parts.push('HDR');
+      if (isDV) {
+        const transfer = (videoStream.ColorTransfer || '').toLowerCase();
+        const rangeType = (videoStream.VideoRangeType || '').toLowerCase();
+        const hasTrueHDR = /smpte2084|arib-std-b67|pq|hlg/.test(transfer)
+                        || /hdr10|hlg/.test(rangeType);
+        parts.push(hasTrueHDR ? 'HDR' : 'SDR_DV');
+      } else if (isHDR) {
+        parts.push('HDR');
+      }
       if (dvLabel) parts.push(dvLabel);
 
       const audio = detectAudioLabel(audioStreams); // {text,type} | null
