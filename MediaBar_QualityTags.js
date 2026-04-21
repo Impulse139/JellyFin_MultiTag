@@ -102,6 +102,7 @@
             
             // HDR colors
             'HDR': '#cc0000',   // Red
+            'SDR_DV': '#6b4f5a', // Dusty Mauve — DV with SDR base layer
             
             // DV colors are handled by startsWith check
             
@@ -231,6 +232,8 @@
                         qualityData.resolution = part;
                     } else if (part === 'HDR') {
                         qualityData.hdr = 'HDR';
+                    } else if (part === 'SDR_DV') {
+                        qualityData.hdr = 'SDR_DV';
                     } else if (part.startsWith('DV')) {
                         qualityData.dolbyVision = part;
                     }
@@ -348,7 +351,13 @@
                         } else {
                             qualityData.dolbyVision = 'DV';
                         }
-                    } if (hasHDR) {
+                    } if (hasDV) {
+                        const transfer = (videoStream.ColorTransfer || '').toLowerCase();
+                        const rangeType = (videoStream.VideoRangeType || '').toLowerCase();
+                        const hasTrueHDR = /smpte2084|arib-std-b67|pq|hlg/.test(transfer)
+                                        || /hdr10|hlg/.test(rangeType);
+                        qualityData.hdr = hasTrueHDR ? 'HDR' : 'SDR_DV';
+                    } else if (hasHDR) {
                         qualityData.hdr = 'HDR';
                     }
                 }
