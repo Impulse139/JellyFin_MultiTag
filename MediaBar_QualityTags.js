@@ -355,7 +355,7 @@
                         const transfer = (videoStream.ColorTransfer || '').toLowerCase();
                         const rangeType = (videoStream.VideoRangeType || '').toLowerCase();
                         const hasTrueHDR = /smpte2084|arib-std-b67|pq|hlg/.test(transfer);
-                        qualityData.hdr = hasTrueHDR ? 'HDR' : 'SDR';
+                        qualityData.hdr = hasTrueHDR ? 'HDR' : 'SDR_DV';
                     } else if (hasHDR) {
                         qualityData.hdr = 'HDR';
                     }
@@ -435,7 +435,7 @@
 
             if (qualityData.hdr) {
                 badges.push(createQualityBadge(
-                    qualityData.hdr, 
+                    qualityData.hdr === 'SDR_DV' ? 'SDR' : qualityData.hdr, 
                     getQualityBadgeColor(qualityData.hdr)
                 ));
             }
