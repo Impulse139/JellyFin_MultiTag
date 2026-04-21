@@ -706,7 +706,7 @@
         const transfer = (videoStream.ColorTransfer || '').toLowerCase();
         const rangeType = (videoStream.VideoRangeType || '').toLowerCase();
         const hasTrueHDR = /smpte2084|arib-std-b67|pq|hlg/.test(transfer);
-        parts.push(hasTrueHDR ? 'HDR' : 'SDR_DV');
+        parts.push(hasTrueHDR ? 'HDR' : 'SDR');
       } else if (isHDR) {
         parts.push('HDR');
       }
