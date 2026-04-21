@@ -121,10 +121,11 @@ This fork first explicitly requests the first episode of Season 1 (`ParentIndexN
 
 #### HDR / Dolby Vision badges
 
-| Badge | Color | Hex |
-|---|---|---|
-| DV (Dolby Vision) | ![](https://placehold.co/15x15/8000cc/8000cc.png) | `#8000cc` |
-| HDR | ![](https://placehold.co/15x15/cc0000/cc0000.png) | `#cc0000` |
+| Badge | Color | Hex | Notes |
+|---|---|---|---|
+| DV (Dolby Vision) | ![](https://placehold.co/15x15/8000cc/8000cc.png) | `#8000cc` | |
+| HDR | ![](https://placehold.co/15x15/cc0000/cc0000.png) | `#cc0000` | |
+| SDR (DV+SDR) | ![](https://placehold.co/15x15/6b4f5a/6b4f5a.png) | `#6b4f5a` | Shown instead of HDR when DV base layer is SDR (BT.709) |
 
 ---
 
