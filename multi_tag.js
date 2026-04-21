@@ -307,7 +307,7 @@
     // ===== Badge creation =====
     function createLabel(label, type='quality', customBg=null, customTextColor=null) {
       const badge = document.createElement('div');
-      badge.textContent = label;
+      badge.textContent = label === 'SDR_DV' ? 'SDR' : label;
       badge.className = overlayClass;
 
       let bgColor = customBg || '#444';
@@ -706,7 +706,7 @@
         const transfer = (videoStream.ColorTransfer || '').toLowerCase();
         const rangeType = (videoStream.VideoRangeType || '').toLowerCase();
         const hasTrueHDR = /smpte2084|arib-std-b67|pq|hlg/.test(transfer);
-        parts.push(hasTrueHDR ? 'HDR' : 'SDR');
+        parts.push(hasTrueHDR ? 'HDR' : 'SDR_DV');
       } else if (isHDR) {
         parts.push('HDR');
       }
